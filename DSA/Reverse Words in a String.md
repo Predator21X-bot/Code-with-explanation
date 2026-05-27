@@ -8,82 +8,65 @@ LeetCode: [Reverse Words in a String](https://leetcode.com/problems/reverse-word
 
 # 📌 Problem Statement
 
-Given a string `s`, reverse the order of the words.
+Given a string `s`, reverse the order of words.
 
-A **word** is defined as a sequence of non-space characters.
+A word is defined as a sequence of non-space characters.
 
 Additionally:
 
 * Remove leading spaces
 * Remove trailing spaces
-* Reduce multiple spaces between words to a single space
+* Remove multiple spaces between words
 
 ---
 
-# 🧠 Examples
-
-## Example 1
+# 🧠 Example
 
 ```cpp
-Input:  "the sky is blue"
+Input:  "  the sky   is blue  "
+
 Output: "blue is sky the"
 ```
 
 ---
 
-## Example 2
+# 🧠 Intuition
+
+We need to:
+
+1. Extract valid words
+2. Ignore unnecessary spaces
+3. Reverse word order
+
+Instead of manually parsing spaces, we can use:
 
 ```cpp
-Input:  "  hello world  "
-Output: "world hello"
+stringstream
 ```
+
+which automatically extracts words cleanly.
 
 ---
 
-## Example 3
+# ⚡ Approach 1 — Using `stringstream`
+
+---
+
+# 🧠 What is `stringstream`?
+
+`stringstream` is a C++ class that allows us to treat a string like an input stream.
+
+It works similarly to:
 
 ```cpp
-Input:  "a good   example"
-Output: "example good a"
+cin
 ```
 
----
-
-# 🔍 Key Observations
-
-* Words are separated by spaces
-* Input may contain:
-
-  * Leading spaces
-  * Trailing spaces
-  * Multiple spaces between words
-* Final answer must contain:
-
-  * Exactly one space between words
-  * No extra spaces
+but reads data from a string instead of keyboard input.
 
 ---
 
-# ⚡ Approach 1 — Using `stringstream` (Clean & Easy)
-
----
-
-# 🧠 Core Idea
-
-1. Extract words using `stringstream`
-2. Build answer in reverse order
-
----
-
-# 📚 What is `stringstream`?
-
-`stringstream` is a class in C++ used to treat a string like an input/output stream.
-
-It works similarly to `cin`.
-
----
-
-## ✅ Header File
+# ✅ Header File
 
 ```cpp
 #include <sstream>
@@ -91,13 +74,39 @@ It works similarly to `cin`.
 
 ---
 
-# 🧠 Why Use It?
+# 🧠 Syntax
+
+```cpp
+stringstream ss(stringName);
+```
+
+Example:
+
+```cpp
+string s = "hello world";
+
+stringstream ss(s);
+```
+
+Now `ss` can extract words one by one.
+
+---
+
+# 🧠 How Extraction Works
+
+```cpp
+ss >> word
+```
+
+This means:
+
+👉 Extract next word from stream into variable `word`
 
 It automatically:
 
-* Splits words
-* Ignores multiple spaces
-* Makes parsing strings easier
+* skips leading spaces
+* skips multiple spaces
+* stops at space
 
 ---
 
@@ -109,6 +118,7 @@ It automatically:
 using namespace std;
 
 int main() {
+
     string s = "  hello   world  ";
 
     stringstream ss(s);
@@ -123,7 +133,7 @@ int main() {
 
 ---
 
-## ✅ Output
+# ✅ Output
 
 ```cpp
 hello
@@ -132,44 +142,109 @@ world
 
 ---
 
-# 🔥 Important Behavior
+# 🧠 Why is `word` String Used?
 
 ```cpp
-ss >> word
+string word;
 ```
 
-automatically:
+We need a temporary variable to store each extracted word.
 
-* skips leading spaces
-* skips multiple spaces
-* extracts one word at a time
+Example:
 
-This is why `stringstream` is perfect for this problem.
+Input:
+
+```cpp
+"the sky is blue"
+```
+
+Iterations:
+
+| Extraction | word stores |
+| ---------- | ----------- |
+| 1          | `"the"`     |
+| 2          | `"sky"`     |
+| 3          | `"is"`      |
+| 4          | `"blue"`    |
 
 ---
 
-# ✅ Solution Using `stringstream`
+# ⚡ Algorithm (StringStream Solution)
+
+---
+
+## ✅ Step-by-Step Algorithm
+
+### Step 1
+
+Create stringstream object
+
+```cpp
+stringstream ss(s);
+```
+
+---
+
+### Step 2
+
+Extract words one by one
+
+```cpp
+while (ss >> word)
+```
+
+---
+
+### Step 3
+
+Add current word at front of result
+
+```cpp
+result = word + " " + result;
+```
+
+This reverses the order.
+
+---
+
+### Step 4
+
+Return final answer
+
+---
+
+# ✅ Code
 
 ```cpp
 class Solution {
 public:
+
     string reverseWords(string s) {
 
+        // Step 1: Create stringstream
         stringstream ss(s);
 
+        // Stores extracted word
         string word;
+
+        // Final answer
         string result = "";
 
+        // Step 2: Extract words one by one
         while (ss >> word) {
 
+            // First word
             if (result.empty()) {
                 result = word;
             }
+
+            // Add current word at front
             else {
                 result = word + " " + result;
             }
         }
 
+        // Step 3: Return result
         return result;
     }
 };
@@ -177,9 +252,11 @@ public:
 
 ---
 
-# 🧠 Dry Run
+# 🧠 How This Code Works Internally
 
-Input:
+---
+
+## Input
 
 ```cpp
 "  the sky   is blue  "
@@ -187,63 +264,161 @@ Input:
 
 ---
 
-## Step-by-Step
+# 🔹 Initial State
 
-| Extracted Word | Result              |
-| -------------- | ------------------- |
-| the            | `"the"`             |
-| sky            | `"sky the"`         |
-| is             | `"is sky the"`      |
-| blue           | `"blue is sky the"` |
+```cpp
+result = ""
+```
 
 ---
 
-# ⏱ Complexity Analysis
-
-## Time Complexity
+# 🔹 Iteration 1
 
 ```cpp
-O(n²)
+word = "the"
 ```
 
-Why?
+Since result is empty:
 
-Because:
+```cpp
+result = "the"
+```
+
+---
+
+# 🔹 Iteration 2
+
+```cpp
+word = "sky"
+```
+
+Now:
+
+```cpp
+result = "sky the"
+```
+
+---
+
+# 🔹 Iteration 3
+
+```cpp
+word = "is"
+```
+
+Now:
+
+```cpp
+result = "is sky the"
+```
+
+---
+
+# 🔹 Iteration 4
+
+```cpp
+word = "blue"
+```
+
+Now:
+
+```cpp
+result = "blue is sky the"
+```
+
+---
+
+# ✅ Final Answer
+
+```cpp
+"blue is sky the"
+```
+
+---
+
+# 🧠 Why `result.empty()` is Used?
+
+For first word:
+
+```cpp
+result = word;
+```
+
+Otherwise:
 
 ```cpp
 result = word + " " + result;
 ```
 
-creates a new string every iteration.
+This avoids extra space at beginning/end.
 
 ---
 
-## Space Complexity
+# ❗ Problem in This Solution
+
+This line:
 
 ```cpp
-O(n)
+result = word + " " + result;
+```
+
+creates new strings repeatedly.
+
+So time complexity becomes:
+
+```cpp
+O(n²)
 ```
 
 ---
 
-# ❗ Drawback of This Approach
+# ⚡ Better Optimized Solution
 
-Repeated string concatenation at the front is expensive.
+Instead of adding at front repeatedly:
+
+1. Store words in vector
+2. Traverse vector backwards
 
 ---
 
-# ⚡ Approach 2 — Optimized Solution (O(n))
+# ⚡ Optimized Algorithm
 
 ---
 
-# 🧠 Core Idea
+## ✅ Step 1
 
-Instead of adding words at the front repeatedly:
+Extract all words using stringstream
 
-1. Extract all words
-2. Store them in a vector
-3. Traverse vector backwards
-4. Build final answer efficiently
+---
+
+## ✅ Step 2
+
+Store words in vector
+
+Example:
+
+```cpp
+["the", "sky", "is", "blue"]
+```
+
+---
+
+## ✅ Step 3
+
+Traverse vector from back
+
+```cpp
+blue
+is
+sky
+the
+```
+
+---
+
+## ✅ Step 4
+
+Build final answer
 
 ---
 
@@ -252,25 +427,32 @@ Instead of adding words at the front repeatedly:
 ```cpp
 class Solution {
 public:
+
     string reverseWords(string s) {
 
+        // Create stream
         stringstream ss(s);
 
-        vector<string> words;
+        // Temporary word storage
         string word;
+
+        // Store all words
+        vector<string> words;
 
         // Extract words
         while (ss >> word) {
             words.push_back(word);
         }
 
+        // Final result
         string result = "";
 
-        // Build reversed sentence
+        // Traverse backwards
         for (int i = words.size() - 1; i >= 0; i--) {
 
             result += words[i];
 
+            // Add space between words
             if (i != 0) {
                 result += " ";
             }
@@ -293,7 +475,7 @@ Input:
 
 ---
 
-## Step 1: Store Words
+# 🔹 Vector Stores
 
 ```cpp
 ["the", "sky", "is", "blue"]
@@ -301,12 +483,20 @@ Input:
 
 ---
 
-## Step 2: Traverse Backwards
+# 🔹 Reverse Traversal
+
+| i | Add  |
+| - | ---- |
+| 3 | blue |
+| 2 | is   |
+| 1 | sky  |
+| 0 | the  |
+
+---
+
+# ✅ Final Output
 
 ```cpp
-"blue"
-"blue is"
-"blue is sky"
 "blue is sky the"
 ```
 
@@ -314,159 +504,36 @@ Input:
 
 # ⏱ Complexity Analysis
 
-## Time Complexity
-
-```cpp
-O(n)
-```
-
-Each character processed a constant number of times.
+| Approach            | Time  | Space |
+| ------------------- | ----- | ----- |
+| Front Concatenation | O(n²) | O(n)  |
+| Vector + Reverse    | O(n)  | O(n)  |
 
 ---
 
-## Space Complexity
-
-```cpp
-O(n)
-```
-
-for storing words.
+# ⚡ Most Optimized In-place Solution
 
 ---
 
-# ⚡ Approach 3 — In-place Optimal Two Pointer Solution
-
----
-
-# 🧠 Core Idea
+# 🧠 Algorithm
 
 1. Remove extra spaces
-2. Reverse entire string
-3. Reverse each individual word
+2. Reverse complete string
+3. Reverse each word individually
 
 ---
 
-# 🔥 Why This Works
-
-Suppose:
-
-```cpp
-"the sky is blue"
-```
-
-After reversing whole string:
-
-```cpp
-"eulb si yks eht"
-```
-
-Now reverse each word:
-
-```cpp
-"blue is sky the"
-```
-
-Done ✅
-
----
-
-# ✅ Fully Optimized Code
-
-```cpp
-class Solution {
-public:
-
-    void reverseRange(string &s, int left, int right) {
-
-        while (left < right) {
-            swap(s[left++], s[right--]);
-        }
-    }
-
-    string cleanSpaces(string s) {
-
-        int n = s.length();
-
-        string result = "";
-
-        int i = 0;
-
-        while (i < n) {
-
-            // Skip spaces
-            while (i < n && s[i] == ' ') {
-                i++;
-            }
-
-            // Add word
-            while (i < n && s[i] != ' ') {
-                result += s[i];
-                i++;
-            }
-
-            // Skip extra spaces
-            while (i < n && s[i] == ' ') {
-                i++;
-            }
-
-            // Add single space if needed
-            if (i < n) {
-                result += ' ';
-            }
-        }
-
-        return result;
-    }
-
-    string reverseWords(string s) {
-
-        // Step 1: Remove extra spaces
-        s = cleanSpaces(s);
-
-        int n = s.length();
-
-        // Step 2: Reverse whole string
-        reverseRange(s, 0, n - 1);
-
-        // Step 3: Reverse each word
-        int start = 0;
-
-        for (int end = 0; end <= n; end++) {
-
-            if (end == n || s[end] == ' ') {
-
-                reverseRange(s, start, end - 1);
-
-                start = end + 1;
-            }
-        }
-
-        return s;
-    }
-};
-```
-
----
-
-# 🧠 Dry Run
+# ✅ Example
 
 Input:
 
 ```cpp
-"  the sky is blue  "
-```
-
----
-
-## Step 1 — Remove Spaces
-
-```cpp
 "the sky is blue"
 ```
 
 ---
 
-## Step 2 — Reverse Whole String
+## Reverse whole string
 
 ```cpp
 "eulb si yks eht"
@@ -474,7 +541,7 @@ Input:
 
 ---
 
-## Step 3 — Reverse Individual Words
+## Reverse each word
 
 ```cpp
 "blue is sky the"
@@ -482,9 +549,7 @@ Input:
 
 ---
 
-# ⏱ Complexity Analysis
-
-## Time Complexity
+# ✅ Time Complexity
 
 ```cpp
 O(n)
@@ -492,21 +557,21 @@ O(n)
 
 ---
 
-## Space Complexity
+# ✅ Space Complexity
 
 ```cpp
 O(1)
 ```
 
-(ignoring output string)
+---
+
+# ❗ Common Mistakes
 
 ---
 
-# ⚠️ Common Mistakes
+## ❌ Forgetting Extra Spaces
 
----
-
-## ❌ Forgetting Multiple Spaces
+Input:
 
 ```cpp
 "a   good   example"
@@ -536,85 +601,33 @@ Correct:
 
 ---
 
-## ❌ Using Front Concatenation Excessively
+## ❌ Misunderstanding `stringstream`
 
-```cpp
-result = word + result;
-```
+It extracts:
 
-This causes repeated copying.
-
----
-
-## ❌ Forgetting Empty String Cases
-
-Input:
-
-```cpp
-"     "
-```
-
-Output should be:
-
-```cpp
-""
-```
+* word by word
+* not character by character
 
 ---
 
 # 🧠 Important Concepts Learned
 
----
-
-## ✅ String Parsing
-
-Extracting meaningful tokens from strings.
-
----
-
-## ✅ `stringstream`
-
-Useful for:
-
-* parsing words
-* splitting strings
-* handling spaces automatically
-
----
-
-## ✅ Two Pointer Technique
-
-Used for:
-
-* reversing
-* trimming spaces
-* in-place operations
-
----
-
-## ✅ String Reversal Pattern
-
-Very common interview technique.
-
----
-
-# 🏷 Tags
-
-* Strings
+* String Parsing
+* `stringstream`
+* Reversal Techniques
 * Two Pointers
-* StringStream
-* Parsing
-* In-place Algorithms
+* Space Handling
+* String Manipulation
 
 ---
 
-# 🔥 Interview Tips
+# 🔥 Interview Tip
 
 If interviewer asks:
 
 ---
 
-## ✅ “Simple readable solution?”
+## ✅ Easy Readable Solution
 
 Use:
 
@@ -624,7 +637,7 @@ stringstream
 
 ---
 
-## ✅ “Most optimized solution?”
+## ✅ Best Optimized Solution
 
 Use:
 
@@ -634,16 +647,6 @@ Use:
 
 ---
 
-# 🚀 Final Takeaway
+# 🚀 Final Revision Line
 
-| Approach                   | Time  | Space | Difficulty |
-| -------------------------- | ----- | ----- | ---------- |
-| Stringstream + prepend     | O(n²) | O(n)  | Easy       |
-| Vector + reverse traversal | O(n)  | O(n)  | Medium     |
-| In-place reverse           | O(n)  | O(1)  | Hard       |
-
----
-
-# 🧠 Revision One-Liner
-
-> “Clean spaces → reverse whole string → reverse each word”
+> “Extract words cleanly using stringstream → reverse order → build answer”
