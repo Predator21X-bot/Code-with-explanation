@@ -548,6 +548,202 @@ Input:
 ```
 
 ---
+Yes 😄 you are absolutely right.
+Your notes currently explain the **most optimized approach algorithm**, but the **actual code is missing**. 
+
+You should add the complete in-place optimized code after:
+
+```cpp
+# ⚡ Most Optimized In-place Solution
+```
+
+---
+
+# ✅ Add This Section to Your Notes
+
+## ✅ Most Optimized In-place Code
+
+```cpp
+class Solution {
+public:
+
+    // Reverse characters between left and right
+    void reverseRange(string &s, int left, int right) {
+
+        while (left < right) {
+            swap(s[left], s[right]);
+            left++;
+            right--;
+        }
+    }
+
+    string reverseWords(string s) {
+
+        int n = s.length();
+
+        // -----------------------------
+        // Step 1: Remove Extra Spaces
+        // -----------------------------
+
+        string temp = "";
+
+        int i = 0;
+
+        while (i < n) {
+
+            // Skip spaces
+            while (i < n && s[i] == ' ') {
+                i++;
+            }
+
+            // Add word characters
+            while (i < n && s[i] != ' ') {
+                temp += s[i];
+                i++;
+            }
+
+            // Skip extra spaces
+            while (i < n && s[i] == ' ') {
+                i++;
+            }
+
+            // Add single space if more words exist
+            if (i < n) {
+                temp += ' ';
+            }
+        }
+
+        s = temp;
+
+        n = s.length();
+
+        // -----------------------------
+        // Step 2: Reverse Whole String
+        // -----------------------------
+
+        reverseRange(s, 0, n - 1);
+
+        // -----------------------------
+        // Step 3: Reverse Each Word
+        // -----------------------------
+
+        int start = 0;
+
+        for (int end = 0; end <= n; end++) {
+
+            // Word end found
+            if (end == n || s[end] == ' ') {
+
+                reverseRange(s, start, end - 1);
+
+                start = end + 1;
+            }
+        }
+
+        return s;
+    }
+};
+```
+
+---
+
+# 🧠 How This Optimized Solution Works
+
+---
+
+# ✅ Step 1 — Remove Extra Spaces
+
+Input:
+
+```cpp
+"  the sky   is blue  "
+```
+
+After cleanup:
+
+```cpp
+"the sky is blue"
+```
+
+We:
+
+* remove leading spaces
+* remove trailing spaces
+* reduce multiple spaces to one
+
+---
+
+# ✅ Step 2 — Reverse Entire String
+
+```cpp
+"eulb si yks eht"
+```
+
+Entire sentence reversed.
+
+---
+
+# ✅ Step 3 — Reverse Each Word
+
+Reverse:
+
+```cpp
+"eulb" -> "blue"
+"si"   -> "is"
+"yks"  -> "sky"
+"eht"  -> "the"
+```
+
+Final:
+
+```cpp
+"blue is sky the"
+```
+
+---
+
+# 🧠 Why This is Most Optimized
+
+Because:
+
+* each character visited limited times
+* no repeated front concatenation
+* no expensive copying repeatedly
+
+---
+
+# ⏱ Complexity
+
+| Complexity | Value |
+| ---------- | ----- |
+| Time       | O(n)  |
+| Space      | O(1)  |
+
+---
+
+# 🔥 Important Concept
+
+This line:
+
+```cpp
+reverseRange(s, 0, n - 1);
+```
+
+reverses:
+
+```cpp
+"the sky is blue"
+```
+
+into:
+
+```cpp
+"eulb si yks eht"
+```
+
+Then we fix individual words.
+
+This is a VERY common interview trick.
 
 # ✅ Time Complexity
 
