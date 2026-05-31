@@ -1,101 +1,748 @@
-# 🧩 Max Consecutive Ones III
+# Max Consecutive Ones III — Complete Notes
 
-### 🔗 Problem Link
+## Problem Link
 
-LeetCode: [https://leetcode.com/problems/max-consecutive-ones-iii/](https://leetcode.com/problems/max-consecutive-ones-iii/)
+LeetCode: Max Consecutive Ones III
 
 ---
 
-# 🧠 Problem Understanding
+# Problem Summary
 
 Given:
 
-* Binary array `nums`
-* Integer `k`
+```cpp
+vector<int> nums;
+int k;
+```
 
-👉 You can flip at most `k` zeros → `1`
+where:
 
-👉 Goal:
+```text
+nums contains only 0 and 1
+```
 
-> Find **longest subarray of 1s**
+You may flip:
+
+```text
+at most k zeros → 1
+```
+
+Goal:
+
+# Find the length of the longest contiguous subarray that can become all 1s.
 
 ---
 
-## 🔍 Key Translation
+# Example
 
-```text
-Flip ≤ k zeros → window can have at most k zeros
+```cpp
+nums = [1,1,1,0,0,0,1,1,1,1,0]
+k = 2
+```
+
+Output:
+
+```cpp
+6
 ```
 
 ---
 
-# 🧠 Step-by-Step Thinking (IMPORTANT 🔥)
+# Why?
 
----
-
-## 🧩 Step 1: Identify pattern
-
-👉 Not fixed size
-👉 Need longest valid subarray
-
----
-
-## 🧠 Conclusion
-
-> This is a **Variable Sliding Window problem**
-
----
-
-## 🧩 Step 2: What to track?
+Choose window:
 
 ```text
-zeroCount = number of zeros in current window
+1 1 0 0 1 1
+```
+
+Contains:
+
+```text
+2 zeros
+```
+
+Flip both:
+
+```text
+1 1 1 1 1 1
+```
+
+Length:
+
+```text
+6
 ```
 
 ---
 
-## 🧩 Step 3: Valid condition
+# MOST Important Observation
+
+The problem says:
 
 ```text
-zeroCount ≤ k  → valid window
-zeroCount > k  → invalid window
+flip at most k zeros
+```
+
+Let's rewrite it.
+
+Instead of thinking:
+
+```text
+which zeros should I flip?
+```
+
+Think:
+
+# How many zeros exist inside my current window?
+
+---
+
+# Key Translation
+
+```text
+Window contains ≤ k zeros
+```
+
+means:
+
+```text
+I can flip all of them
+```
+
+Therefore:
+
+# valid window
+
+---
+
+# Example
+
+Window:
+
+```text
+1 1 0 1 0 1
+```
+
+Zeros:
+
+```text
+2
+```
+
+If:
+
+```text
+k = 2
+```
+
+Then:
+
+```text
+flip both zeros
+```
+
+Window becomes:
+
+```text
+1 1 1 1 1 1
+```
+
+Length:
+
+```text
+6
+```
+
+Valid candidate.
+
+---
+
+# REAL Goal
+
+We are NOT searching for:
+
+```text
+longest sequence of 1s
+```
+
+We are searching for:
+
+# longest subarray containing at most k zeros
+
+This is the entire problem.
+
+---
+
+# Step 1 — Identify Pattern
+
+Question asks:
+
+```text
+longest subarray
+```
+
+and
+
+```text
+at most k
+```
+
+These are classic signs of:
+
+# Variable Sliding Window
+
+---
+
+# Why Not Fixed Window?
+
+Fixed window problems say:
+
+```text
+window size = k
+```
+
+Example:
+
+* Maximum sum of size k
+* Maximum average of size k
+
+Here:
+
+```text
+window size is not given
+```
+
+We need the longest valid window.
+
+Therefore:
+
+# Variable Sliding Window
+
+---
+
+# Core Idea
+
+Maintain a window:
+
+```text
+left -------- right
+```
+
+that always satisfies:
+
+```text
+zeroCount <= k
 ```
 
 ---
 
-# ⚡ Approach: Variable Sliding Window
+# What Should We Track?
+
+Only one thing:
+
+```cpp
+int zeroCount;
+```
 
 ---
 
-## 🧠 Core idea
+# Why?
 
-> Expand → if invalid → shrink → update answer
+Because validity depends only on:
+
+```text
+number of zeros
+```
+
+inside current window.
 
 ---
 
-## 💻 Code
+# Window Rules
 
-```cpp id="code"
+---
+
+# Valid Window
+
+```text
+zeroCount <= k
+```
+
+Means:
+
+```text
+all zeros can be flipped
+```
+
+---
+
+# Invalid Window
+
+```text
+zeroCount > k
+```
+
+Means:
+
+```text
+too many zeros
+```
+
+Cannot flip them all.
+
+---
+
+# Strategy
+
+## Expand Window
+
+Move:
+
+```cpp
+right++
+```
+
+Add new element.
+
+---
+
+## If Window Becomes Invalid
+
+Shrink from left.
+
+Move:
+
+```cpp
+left++
+```
+
+until:
+
+```text
+zeroCount <= k
+```
+
+again.
+
+---
+
+# Detailed Dry Run
+
+Input:
+
+```cpp
+nums = [1,1,0,1,0,1,0]
+k = 2
+```
+
+---
+
+# Start
+
+```text
+L
+R
+
+1
+```
+
+Window:
+
+```text
+[1]
+```
+
+Zeros:
+
+```text
+0
+```
+
+Valid.
+
+Length:
+
+```text
+1
+```
+
+---
+
+# Expand
+
+```text
+L
+  R
+
+1 1
+```
+
+Zeros:
+
+```text
+0
+```
+
+Valid.
+
+Length:
+
+```text
+2
+```
+
+---
+
+# Expand
+
+```text
+L
+    R
+
+1 1 0
+```
+
+Zeros:
+
+```text
+1
+```
+
+Valid.
+
+Length:
+
+```text
+3
+```
+
+---
+
+# Expand
+
+```text
+L
+      R
+
+1 1 0 1
+```
+
+Zeros:
+
+```text
+1
+```
+
+Valid.
+
+Length:
+
+```text
+4
+```
+
+---
+
+# Expand
+
+```text
+L
+        R
+
+1 1 0 1 0
+```
+
+Zeros:
+
+```text
+2
+```
+
+Valid.
+
+Length:
+
+```text
+5
+```
+
+---
+
+# Expand
+
+```text
+L
+          R
+
+1 1 0 1 0 1
+```
+
+Zeros:
+
+```text
+2
+```
+
+Valid.
+
+Length:
+
+```text
+6
+```
+
+---
+
+# Expand Again
+
+```text
+L
+            R
+
+1 1 0 1 0 1 0
+```
+
+Zeros:
+
+```text
+3
+```
+
+Now:
+
+```text
+3 > 2
+```
+
+Invalid.
+
+---
+
+# What Do We Do?
+
+Shrink.
+
+---
+
+Move Left:
+
+```text
+1 1 0 1 0 1 0
+  ↑
+```
+
+Removed:
+
+```text
+1
+```
+
+Zeros unchanged.
+
+Still invalid.
+
+---
+
+Move Again:
+
+```text
+1 1 0 1 0 1 0
+    ↑
+```
+
+Removed:
+
+```text
+1
+```
+
+Still invalid.
+
+---
+
+Move Again:
+
+```text
+1 1 0 1 0 1 0
+      ↑
+```
+
+Removed:
+
+```text
+0
+```
+
+Now:
+
+```text
+zeroCount--
+```
+
+Becomes:
+
+```text
+2
+```
+
+Valid again.
+
+---
+
+# Why Use While?
+
+Suppose:
+
+```text
+zeroCount = 5
+k = 2
+```
+
+One shrink won't fix it.
+
+Need multiple shrinks.
+
+Therefore:
+
+```cpp
+while(zeroCount > k)
+```
+
+NOT:
+
+```cpp
+if(zeroCount > k)
+```
+
+---
+
+# Important Mental Model
+
+Think of window as:
+
+```text
+rubber band
+```
+
+Expand:
+
+```text
+right++
+```
+
+Too many zeros?
+
+Shrink:
+
+```text
+left++
+```
+
+until valid again.
+
+---
+
+# Code Walkthrough
+
+## Initialize
+
+```cpp
+int left = 0;
+int zeroCount = 0;
+int maxLen = 0;
+```
+
+---
+
+## Expand Window
+
+```cpp
+for(int right = 0; right < nums.size(); right++)
+```
+
+---
+
+## Count New Zero
+
+```cpp
+if(nums[right] == 0)
+    zeroCount++;
+```
+
+---
+
+## Fix Invalid Window
+
+```cpp
+while(zeroCount > k)
+```
+
+---
+
+## Remove Left Element
+
+If left element is zero:
+
+```cpp
+if(nums[left] == 0)
+    zeroCount--;
+```
+
+---
+
+## Move Left
+
+```cpp
+left++;
+```
+
+---
+
+## Update Answer
+
+Current valid window length:
+
+```cpp
+right - left + 1
+```
+
+Update:
+
+```cpp
+maxLen =
+max(maxLen,
+    right-left+1);
+```
+
+---
+
+# Complete Code
+
+```cpp
 class Solution {
 public:
     int longestOnes(vector<int>& nums, int k) {
+
         int left = 0;
         int zeroCount = 0;
         int maxLen = 0;
 
-        for (int right = 0; right < nums.size(); right++) {
+        for(int right = 0;right < nums.size();right++) {
 
-            // expand
-            if (nums[right] == 0) zeroCount++;
+            if(nums[right] == 0)
+                zeroCount++;
 
-            // shrink until valid
-            while (zeroCount > k) {
-                if (nums[left] == 0) zeroCount--;
+            while(zeroCount > k) {
+
+                if(nums[left] == 0)
+                    zeroCount--;
+
                 left++;
             }
 
-            // update answer
-            maxLen = max(maxLen, right - left + 1);
+            maxLen =
+                max(maxLen,right-left+1);
         }
 
         return maxLen;
@@ -105,88 +752,118 @@ public:
 
 ---
 
-# ⏱ Complexity
+# Complexity Analysis
 
-* Time: **O(n)**
-* Space: **O(1)**
+## Time
 
----
-
-# ❗ Common Mistakes
-
-* ❌ Using fixed window approach
-* ❌ Not shrinking window properly
-* ❌ Using `if` instead of `while` (less robust)
-* ❌ Forgetting to update answer after shrink
-
----
-
-# 🧠 Patterns Learned
-
-* Variable sliding window
-* Constraint-based window
-* Dynamic resizing
-
----
-
-# 🏷 Tags
-
-* Array
-* Sliding Window
-
----
-
-# 🔥 Mental Model (REVISION KEY)
-
-> “Grow window → fix when invalid → record best”
-
----
-
-# ⚡ Sliding Window Comparison (VERY IMPORTANT)
-
----
-
-## 🔹 Fixed Window
+Each pointer moves at most:
 
 ```text
-Window size = k (constant)
+n times
 ```
 
-### Examples:
-
-* max sum
-* max average
-* max vowels
-
----
-
-## 🔹 Variable Window (THIS)
+Therefore:
 
 ```text
-Window size changes dynamically
+O(n)
 ```
-
-### Examples:
-
-* longest substring
-* max consecutive ones
-* min subarray ≥ target
 
 ---
 
-# 🧠 Generic Template (MUST REMEMBER)
+# Space
 
-```cpp id="template"
+Only variables used.
+
+```text
+O(1)
+```
+
+---
+
+# Common Mistakes
+
+## Mistake 1
+
+Trying to actually flip zeros.
+
+Not needed.
+
+Just count zeros.
+
+---
+
+## Mistake 2
+
+Using fixed window.
+
+This is variable window.
+
+---
+
+## Mistake 3
+
+Using:
+
+```cpp
+if(zeroCount > k)
+```
+
+instead of:
+
+```cpp
+while(zeroCount > k)
+```
+
+Window may require multiple shrinks.
+
+---
+
+## Mistake 4
+
+Updating answer before fixing invalid window.
+
+Always:
+
+```text
+fix first
+then update answer
+```
+
+---
+
+# Recognition Pattern
+
+Whenever you see:
+
+```text
+Longest ...
+Smallest ...
+At most k ...
+At least k ...
+Condition on subarray ...
+```
+
+Think:
+
+# Variable Sliding Window
+
+---
+
+# Generic Variable Sliding Window Template
+
+```cpp
 int left = 0;
 
-for (int right = 0; right < n; right++) {
+for(int right = 0; right < n; right++) {
 
     // expand
     update state
 
-    while (invalid condition) {
+    while(invalid condition) {
+
         // shrink
         fix state
+
         left++;
     }
 
@@ -197,18 +874,24 @@ for (int right = 0; right < n; right++) {
 
 ---
 
-# 🧠 How to identify variable window
+# Similar Problems
 
-Look for:
-
-* “longest / smallest subarray”
-* “at most k” / “at least k”
-* condition-based constraints
+* Longest Repeating Character Replacement
+* Fruit Into Baskets
+* Longest Substring Without Repeating Characters
+* Binary Subarrays With Sum
+* Minimum Size Subarray Sum
 
 ---
 
-# 🚀 Takeaway
+# Biggest Takeaway
 
-* Don’t fix window size — let it adapt
-* Always maintain **valid window**
-* Track only what matters (zeroCount here)
+The key observation is:
+
+# "At most k flips"
+
+becomes
+
+# "Window can contain at most k zeros"
+
+Once you see that translation, the entire problem becomes a standard variable sliding window problem.
