@@ -672,8 +672,7 @@ public:
                 queueD.push(i);
         }
 
-        while(!queueR.empty() &&
-              !queueD.empty()) {
+        while(!queueR.empty() && !queueD.empty()) {
 
             int r = queueR.front();
             queueR.pop();
@@ -691,9 +690,7 @@ public:
             }
         }
 
-        return queueR.empty()
-                ? "Dire"
-                : "Radiant";
+        return queueR.empty() ? "Dire" : "Radiant";
     }
 };
 ```
