@@ -1,394 +1,332 @@
-# ⚔️ Divide and Conquer Algorithm Design Technique
+# 03. Divide and Conquer
 
-> One of the most powerful paradigms in Computer Science.
-> Break a big problem into smaller independent subproblems, solve them recursively, and combine their solutions.
-
----
-
-# 📚 Table of Contents
-
-* What is Divide and Conquer?
-* Why Do We Need It?
-* General Strategy
-* Three Steps of Divide & Conquer
-* Visualization
-* Examples
-* Advantages
-* Drawbacks
-* Divide & Conquer vs Dynamic Programming
-* Applications
-* Interview Notes
-* Quick Revision Sheet
+*Abdul Bari - Algorithms Playlist*
 
 ---
 
-# 🎯 What is Divide and Conquer?
+# 🎯 Definition
 
-**Divide and Conquer (D&C)** is an algorithm design paradigm where:
+**Divide and Conquer** is an algorithm design technique in which:
+
+1. A problem is divided into smaller subproblems.
+2. Each subproblem is solved independently.
+3. Solutions of subproblems are combined to get the final solution.
+
+---
+
+## General Idea
 
 ```text
-Large Problem
-      ↓
-Divide
-      ↓
-Smaller Subproblems
-      ↓
-Solve Recursively
-      ↓
-Combine Results
-      ↓
+Problem(n)
+     |
+     v
+ Divide
+     |
+     v
+Subproblems
+     |
+     v
+ Solve Recursively
+     |
+     v
+ Combine
+     |
+     v
 Final Solution
 ```
 
-Instead of solving a large problem directly, we repeatedly break it into smaller pieces.
-
 ---
 
-# 🤔 Real-Life Analogy
+# Why Divide and Conquer?
 
-Imagine searching for a word in a dictionary.
+Suppose we have a large problem.
 
-Would you start from page 1?
-
-❌ No
-
-You open somewhere near the middle.
+Instead of solving it directly:
 
 ```text
-Dictionary
-     ↓
-Check Middle Page
-     ↓
-Word Before?
-     ↓
-Go Left
-
-OR
-
-Word After?
-     ↓
-Go Right
+Problem Size = n
 ```
 
-This is exactly how **Binary Search** works.
+We divide it into smaller pieces:
+
+```text
+n
+|
++-- n/2
+|
++-- n/2
+```
+
+Smaller problems are usually easier and faster to solve.
 
 ---
 
-# 🚀 Core Idea
+# Three Steps of Divide and Conquer
 
-A problem of size:
+## 1. Divide
+
+Break the problem into smaller parts.
+
+Example:
+
+```text
+Array of Size 16
+
+[................]
+```
+
+Divide:
+
+```text
+[........][........]
+```
+
+---
+
+## 2. Conquer
+
+Solve each part recursively.
+
+```text
+[....][....]
+```
+
+becomes
+
+```text
+[..][..][..][..]
+```
+
+Continue until the smallest possible problem is reached.
+
+---
+
+## 3. Combine
+
+Combine the solutions obtained from subproblems.
+
+```text
+Solution(A)
+      +
+Solution(B)
+      =
+Final Answer
+```
+
+---
+
+# Recursive Division
+
+Suppose problem size is:
 
 ```text
 n
 ```
 
-is divided into smaller problems:
+After first division:
 
 ```text
 n/2
 n/2
 ```
 
-or
+After second division:
 
 ```text
-n/3
-n/3
-n/3
+n/4
+n/4
+n/4
+n/4
 ```
 
-or some other partition.
-
-These smaller problems are easier to solve.
-
----
-
-# 🔥 Three Steps of Divide and Conquer
-
-Every Divide & Conquer algorithm follows:
-
-## 1️⃣ Divide
-
-Break problem into smaller subproblems.
+After third division:
 
 ```text
-Problem(n)
-      ↓
-Problem(n/2)
-Problem(n/2)
+n/8
+n/8
+n/8
+n/8
+n/8
+n/8
+n/8
+n/8
 ```
 
----
-
-## 2️⃣ Conquer
-
-Solve each subproblem recursively.
+Tree representation:
 
 ```text
-Solve Left
-Solve Right
-```
-
-If the problem becomes very small:
-
-```text
-n = 1
-```
-
-solve directly.
-
-This is called the:
-
-### Base Case
-
----
-
-## 3️⃣ Combine
-
-Merge solutions of subproblems.
-
-```text
-Left Result
-      +
-Right Result
-      ↓
-Final Result
+                    n
+                 /     \
+              n/2      n/2
+             /   \    /   \
+          n/4  n/4 n/4  n/4
 ```
 
 ---
 
-# 🌳 Generic Divide & Conquer Tree
+# Binary Search as Divide and Conquer
+
+Abdul Bari uses Binary Search as the simplest example.
+
+Given:
 
 ```text
-                 Problem(n)
-                 /        \
-                /          \
-         Problem(n/2)   Problem(n/2)
-            /   \          /    \
-           /     \        /      \
-       n/4      n/4    n/4      n/4
+10 20 30 40 50 60 70 80 90
 ```
-
-This recursive decomposition continues until the base case is reached.
-
----
-
-# 📖 Example 1: Binary Search
 
 Find:
 
 ```text
-Key = 75
-```
-
-Array:
-
-```text
-10 20 30 40 50 60 70 75 80 90
+70
 ```
 
 ---
 
-## Divide
+## Step 1
 
-Find middle element.
+Take middle element.
 
 ```text
 Middle = 50
 ```
 
----
-
-## Conquer
-
 Since:
 
 ```text
-75 > 50
+70 > 50
 ```
 
-Ignore left half.
-
-Search only right half.
-
-```text
-60 70 75 80 90
-```
+Discard left half.
 
 ---
 
-## Repeat
+## Step 2
 
-Again divide.
+Remaining:
 
 ```text
-75 found
+60 70 80 90
 ```
+
+Again take middle.
 
 ---
 
-## Complexity
+## Step 3
 
-```text
-O(log n)
-```
-
-Because each step removes half of the search space.
-
----
-
-# 📖 Example 2: Merge Sort
-
-Given:
-
-```text
-8 3 2 9 7 1 5 4
-```
-
----
-
-## Divide
-
-```text
-8 3 2 9 | 7 1 5 4
-```
-
----
-
-Again:
-
-```text
-8 3 | 2 9 | 7 1 | 5 4
-```
-
----
-
-Again:
-
-```text
-8 | 3 | 2 | 9 | 7 | 1 | 5 | 4
-```
-
-Base case reached.
-
----
-
-## Conquer
-
-Single elements are already sorted.
-
----
-
-## Combine
-
-Merge:
-
-```text
-8 + 3
-```
-
-↓
-
-```text
-3 8
-```
-
----
-
-Merge all parts.
-
-Final result:
-
-```text
-1 2 3 4 5 7 8 9
-```
+Find element.
 
 ---
 
 ## Visualization
 
 ```text
-8 3 2 9 7 1 5 4
-        ↓
-8 3 2 9 | 7 1 5 4
-        ↓
-8 3 | 2 9 | 7 1 | 5 4
-        ↓
-8 | 3 | 2 | 9 | 7 | 1 | 5 | 4
-        ↓
-Merge Back Up
-        ↓
-Sorted Array
+10 20 30 40 50 60 70 80 90
+             ^
+            50
+
+Discard Left Half
+
+60 70 80 90
+   ^
+  70
 ```
 
 ---
 
-# 📖 Example 3: Quick Sort
+# Binary Search Code (C++)
 
-Choose:
+```cpp
+int BinarySearch(int A[], int l, int h, int key)
+{
+    while(l <= h)
+    {
+        int mid = (l + h) / 2;
 
-```text
-Pivot
-```
+        if(key == A[mid])
+            return mid;
 
-Example:
+        else if(key < A[mid])
+            h = mid - 1;
 
-```text
-50
-```
+        else
+            l = mid + 1;
+    }
 
----
-
-Partition:
-
-```text
-< 50      > 50
-```
-
----
-
-Recursively sort both sides.
-
-```text
-Left Side
-Right Side
+    return -1;
+}
 ```
 
 ---
 
-Combine automatically through partitioning.
+# Recursive Binary Search
+
+```cpp
+int RBinarySearch(int A[], int l, int h, int key)
+{
+    if(l <= h)
+    {
+        int mid = (l + h) / 2;
+
+        if(key == A[mid])
+            return mid;
+
+        else if(key < A[mid])
+            return RBinarySearch(A,l,mid-1,key);
+
+        else
+            return RBinarySearch(A,mid+1,h,key);
+    }
+
+    return -1;
+}
+```
 
 ---
 
-# 🧠 Important Observation
+# Time Complexity of Binary Search
 
-In Divide & Conquer:
-
-Subproblems are usually:
+At every step:
 
 ```text
-Independent
+n
+n/2
+n/4
+n/8
+...
 ```
 
-Meaning:
+We continue until:
 
 ```text
-Left Part
+1
 ```
 
-does not depend on
+Therefore:
 
 ```text
-Right Part
+n / 2^k = 1
 ```
 
-This independence is the key strength of D&C.
+```text
+2^k = n
+```
+
+```text
+k = log₂(n)
+```
+
+Hence:
+
+```text
+Time Complexity = O(log n)
+```
 
 ---
 
-# ⚡ General Recurrence Relation
+# General Recurrence Relation
 
-Most Divide & Conquer algorithms can be represented as:
+A Divide and Conquer algorithm can often be represented as:
 
 ```text
 T(n) = aT(n/b) + f(n)
@@ -396,334 +334,136 @@ T(n) = aT(n/b) + f(n)
 
 Where:
 
-| Symbol | Meaning                      |
-| ------ | ---------------------------- |
-| a      | Number of subproblems        |
-| n/b    | Size of each subproblem      |
-| f(n)   | Cost of dividing & combining |
+* a = Number of subproblems
+* b = Division factor
+* f(n) = Extra work
 
 ---
 
-## Example
+## Binary Search Recurrence
 
-Binary Search:
+Only one subproblem:
 
 ```text
 T(n)=T(n/2)+1
 ```
 
-Merge Sort:
+Explanation:
 
 ```text
-T(n)=2T(n/2)+n
+T(n/2) -> Recursive Call
++1     -> Comparison Work
 ```
 
 ---
 
-# 🎨 Divide & Conquer Flow
+# Important Observation
+
+In Divide and Conquer:
 
 ```text
-Problem(n)
-      ↓
- Divide
-      ↓
-Subproblems
-      ↓
- Recursive Solve
-      ↓
-Combine
-      ↓
-Answer
+Subproblems are Independent
 ```
-
----
-
-# ✅ Advantages
-
-## Faster Algorithms
-
-Many D&C algorithms are dramatically faster.
 
 Example:
 
-| Problem | Brute Force | D&C        |
-| ------- | ----------- | ---------- |
-| Search  | O(n)        | O(log n)   |
-| Sorting | O(n²)       | O(n log n) |
+```text
+Left Half
+```
+
+does not depend on
+
+```text
+Right Half
+```
+
+This property makes Divide & Conquer powerful.
+
+---
+
+# Advantages
+
+## Faster Algorithms
+
+Example:
+
+| Method        | Complexity |
+| ------------- | ---------- |
+| Linear Search | O(n)       |
+| Binary Search | O(log n)   |
 
 ---
 
 ## Natural Recursive Structure
 
-Easy to express recursively.
+Most Divide & Conquer algorithms can be written recursively.
 
 ---
 
-## Parallelization
+## Parallel Processing
 
 Independent subproblems can be solved simultaneously.
 
 ```text
-CPU 1 → Left Half
+CPU 1 -> Left Half
 
-CPU 2 → Right Half
+CPU 2 -> Right Half
 ```
-
-Very useful in multicore systems.
 
 ---
 
-# ❌ Drawbacks
+# Applications Mentioned
 
-## Recursion Overhead
+Divide and Conquer is used in:
 
-Function calls consume stack memory.
+* Binary Search
+* Merge Sort
+* Quick Sort
+* Strassen Matrix Multiplication
+* Closest Pair Problem
 
----
-
-## Not Always Applicable
-
-Some problems have overlapping subproblems.
-
-For such problems:
-
-```text
-Dynamic Programming
-```
-
-is better.
+These algorithms are discussed later in the playlist.
 
 ---
 
-# ⚔️ Divide & Conquer vs Dynamic Programming
+# Key Takeaways
 
-| Feature       | Divide & Conquer | Dynamic Programming |
-| ------------- | ---------------- | ------------------- |
-| Subproblems   | Independent      | Overlapping         |
-| Reuse Results | No               | Yes                 |
-| Memoization   | Not Needed       | Needed              |
-| Examples      | Merge Sort       | Fibonacci DP        |
+✅ Divide Problem
 
----
+✅ Solve Smaller Problems
 
-## Example
+✅ Combine Solutions
 
-Merge Sort:
+✅ Binary Search is a Divide & Conquer Algorithm
 
-```text
-Left Half
-Right Half
-```
-
-Independent.
-
----
-
-Fibonacci:
-
-```text
-F(5)
-```
-
-requires:
-
-```text
-F(4)
-F(3)
-```
-
-and
-
-```text
-F(4)
-```
-
-again requires:
-
-```text
-F(3)
-```
-
-Repeated work occurs.
-
-Thus DP is better.
-
----
-
-# 🌍 Applications
-
----
-
-## Binary Search
+✅ Binary Search Complexity:
 
 ```text
 O(log n)
 ```
 
----
-
-## Merge Sort
+✅ General Form:
 
 ```text
-O(n log n)
+T(n)=aT(n/b)+f(n)
 ```
 
 ---
 
-## Quick Sort
-
-Average:
-
-```text
-O(n log n)
-```
-
----
-
-## Strassen Matrix Multiplication
-
-Uses recursive matrix division.
-
----
-
-## Closest Pair of Points
-
-Computational Geometry.
-
----
-
-## Karatsuba Multiplication
-
-Fast multiplication of large numbers.
-
----
-
-# 🎤 Interview Questions
-
-### Q1. What are the three steps of Divide & Conquer?
-
-```text
-Divide
-Conquer
-Combine
-```
-
----
-
-### Q2. Which sorting algorithms use D&C?
-
-* Merge Sort
-* Quick Sort
-
----
-
-### Q3. Is Binary Search Divide & Conquer?
-
-✅ Yes
-
-Each step eliminates half the search space.
-
----
-
-### Q4. Why is Merge Sort D&C?
-
-Because it:
-
-```text
-Divide Array
-      ↓
-Sort Recursively
-      ↓
-Merge
-```
-
----
-
-### Q5. Difference between D&C and DP?
-
-```text
-D&C
-```
-
-↓
-
-Independent subproblems
-
-```text
-DP
-```
-
-↓
-
-Overlapping subproblems
-
----
-
-# 📝 Quick Revision Sheet
+# Quick Revision
 
 ```text
 Divide & Conquer
 │
 ├── Divide
-│     └── Break Problem
 │
 ├── Conquer
-│     └── Solve Recursively
 │
 ├── Combine
-│     └── Merge Results
 │
-├── Advantages
-│     ├── Fast
-│     ├── Elegant
-│     └── Parallelizable
+├── Binary Search
+│      └── O(log n)
 │
-└── Applications
-      ├── Binary Search
-      ├── Merge Sort
-      ├── Quick Sort
-      ├── Strassen
-      └── Closest Pair
+└── Recurrence
+       └── T(n)=aT(n/b)+f(n)
 ```
-
----
-
-# 🧠 Memory Trick
-
-```text
-Divide
-   ↓
-Smaller Problems
-
-Conquer
-   ↓
-Solve Them
-
-Combine
-   ↓
-Build Final Answer
-```
-
-Remember:
-
-> "If a problem looks too big, split it until it becomes easy."
-
----
-
-# 🎯 Final Takeaway
-
-Divide & Conquer is one of the most fundamental algorithmic paradigms.
-
-The strategy is simple:
-
-```text
-Big Problem
-     ↓
-Break It
-     ↓
-Solve Smaller Pieces
-     ↓
-Merge Results
-```
-
-Mastering Divide & Conquer is essential because many famous algorithms—Binary Search, Merge Sort, Quick Sort, Strassen's Algorithm, and Closest Pair Problems—are built upon this single idea.
